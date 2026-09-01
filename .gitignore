@@ -1,0 +1,41 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build output
+Web/dist/
+Web/dist-types/
+Web/vite.config.js
+Web/vite.config.d.ts
+**/*.tsbuildinfo
+**/*.jsbundle
+**/*.meta
+
+# Environment files (NEVER commit secrets)
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Local data and runtime artifacts
+Server/data/
+Server/uploads/
+
+# Editor
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+Thumbs.db
+
+# Tooling local state
+.commandcode/plans/

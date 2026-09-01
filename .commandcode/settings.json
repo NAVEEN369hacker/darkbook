@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Shell(dir:*)",
+      "Shell(cd \"C:\\Users\\Naveen\\Desktop\\Experiment\\2\" && dir /B Server Web docs 2>nul)",
+      "Shell(cd \"C:\\Users\\Naveen\\Desktop\\Experiment\\2\\Server\" && dir /B lib routes supabase scripts 2>nul)",
+      "Shell(cd \"C:\\Users\\Naveen\\Desktop\\Experiment\\2\\Server\\supabase\" && dir /B && dir /B functions 2>nul)",
+      "Shell(cd \"C:\\Users\\Naveen\\Desktop\\Experiment\\2\\Web\" && dir /B public 2>nul && cd public 2>nul && dir /B)",
+      "Shell(grep -c '`/api' \"C:\\Users\\Naveen\\Desktop\\Experiment\\2\\Web\\src\\api.ts\")",
+      "powershell",
+      "Shell(node -e \"const fs=require('fs');const p='C:\\\\\\\\Users\\\\\\\\Naveen\\\\\\\\Desktop\\\\\\\\Experiment\\\\\\\\2\\\\\\\\Web\\\\\\\\src\\\\\\\\api.ts';let c=fs.readFileSync(p,'utf8');c=c.replace(/\\\\\\$\\\\{API_BASE\\\\}\\\\/([A-Za-z0-9_\\\\-\\\\/?.=:&,]+)'/g,'\\\\`\\\\${API_BASE}/$1\\\\`,');fs.writeFileSync(p,c);console.log('done')\")",
+      "Shell(node \"C:\\Users\\Naveen\\AppData\\Local\\Temp\\fix-api-base.js\")",
+      "Shell(node \"C:\\Users\\Naveen\\AppData\\Local\\Temp\\fix-api-base2.js\")",
+      "Shell(npm:*)",
+      "Shell(Select-Object:*)",
+      "Shell(node \"C:\\Users\\Naveen\\AppData\\Local\\Temp\\fix-api-base3.js\")",
+      "Shell(del \"C:\\Users\\Naveen\\AppData\\Local\\Temp\\fix-api-base.js\" \"C:\\Users\\Naveen\\AppData\\Local\\Temp\\fix-api-base2.js\" \"C:\\Users\\Naveen\\AppData\\Local\\Temp\\fix-api-base3.js\" 2>nul & echo cleaned)"
+    ],
+    "deny": [],
+    "defaultMode": "default"
+  }
+}
