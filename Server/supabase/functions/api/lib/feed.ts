@@ -196,14 +196,14 @@ export interface CreatePostResult {
   post: PostRow;
   balance: number;
 } | {
-  ok: false;
-  reason: 'insufficient';
-  needed?: number;
-  have?: number;
+  ok: false,
+  reason: 'insufficient',
+  needed?: number,
+  have?: number,
 } | {
-  ok: false;
-  reason: string;
-  message?: string;
+  ok: false,
+  reason: string,
+  message?: string,
 }
 
 export async function createPost(
