@@ -43,7 +43,7 @@ npm run dev                  # http://localhost:5173, proxies /api -> :3001
 
 1. **Apply the migration once** to your Supabase Postgres (via SQL editor or `supabase db push`).
 2. **Deploy the Edge Function**: `supabase functions deploy api`.
-3. **Push the repo to GitHub** and connect it to Netlify. Set the env var `VITE_API_BASE=https://<project>.supabase.co/functions/v1/api` in Netlify.
+3. **Push the repo to GitHub** and connect it to Netlify. Set the env var `VITE_API_BASE=https://<project>.supabase.co/functions/v1` in Netlify (no trailing `/api` — the client appends it).
 
 The Node server in `Server/` is kept for local development only.
 

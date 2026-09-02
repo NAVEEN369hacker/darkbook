@@ -15,8 +15,9 @@ import type { DeviceInfo } from './device';
 
 // Single source of truth for the API base.
 // Dev:    ''           (Vite proxies `${API_BASE}/* to localhost:3001)
-// Prod:   'https://<project>.supabase.co/functions/v1/api'
-const API_BASE = (import.meta.env.VITE_API_BASE ?? '') + '/api';
+// Prod:   'https://<project>.supabase.co/functions/v1'  (no trailing /api)
+const RAW_API_BASE = (import.meta.env.VITE_API_BASE ?? '').replace(/\/api\/?$/, '');
+const API_BASE = `${RAW_API_BASE}/api`;
 
 export type Identity = {
   did: string;
