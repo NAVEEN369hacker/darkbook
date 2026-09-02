@@ -4,7 +4,9 @@
 // color logic is preserved exactly so a UID minted by either server keeps the
 // same handle/name/color.
 
-import { hash as bcryptHash, compare as bcryptCompare } from 'https://deno.land/x/bcrypt@v0.4.1/mod.ts';
+// deno.land/x/bcrypt uses the `Worker` global which isn't available in Supabase
+// Edge Functions. bcryptjs is pure-JS, runs anywhere, no native bindings.
+import bcrypt from 'https://esm.sh/bcryptjs@2.4.3';
 
 // --- friendly handle pools (mirror Server/lib/identity.js) ---
 const ANIMALS = [
@@ -142,12 +144,14 @@ export function ensureUniqueHandle(base: string, taken: Set<string>): string {
 }
 
 export async function hashPassword(password: string): Promise<string> {
-  return await bcryptHash(password);
+  // bcryptjs.hashSync is synchronous but fast enough for short passwords.
+  // 10 rounds matches the previous deno-bcrypt default and the Node server.
+  return bcrypt.hashSync(password, 10);
 }
 
 export async function verifyPassword(password: string, hash: string): Promise<boolean> {
   try {
-    return await bcryptCompare(password, hash);
+    return bcrypt.compareSync(password, hash);
   } catch {
     return false;
   }
