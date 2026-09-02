@@ -65,11 +65,9 @@ export async function getPoll(
   };
 }
 
-export interface VoteResult {
-  ok: true;
-  poll: EnrichedPoll;
-  changed: boolean;
-} | { ok: false; reason: string; message: string }
+export interface VoteOk { ok: true; poll: EnrichedPoll; changed: boolean; }
+export interface VoteFail { ok: false; reason: string; message: string; }
+export type VoteResult = VoteOk | VoteFail;
 
 export async function vote(
   supabase: SupabaseClient,

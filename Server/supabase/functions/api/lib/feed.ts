@@ -191,20 +191,10 @@ export interface CreatePostInput {
   pollId?: string | null;
 }
 
-export interface CreatePostResult {
-  ok: true;
-  post: PostRow;
-  balance: number;
-} | {
-  ok: false,
-  reason: 'insufficient',
-  needed?: number,
-  have?: number,
-} | {
-  ok: false,
-  reason: string,
-  message?: string,
-}
+export interface CreatePostOk { ok: true; post: PostRow; balance: number; }
+export interface CreatePostInsufficient { ok: false; reason: 'insufficient'; needed?: number; have?: number; }
+export interface CreatePostFail { ok: false; reason: string; message?: string; }
+export type CreatePostResult = CreatePostOk | CreatePostInsufficient | CreatePostFail;
 
 export async function createPost(
   supabase: SupabaseClient,
@@ -482,10 +472,9 @@ export async function listComments(
   return out;
 }
 
-export interface CreateCommentResult {
-  ok: true;
-  comment: EnrichedComment;
-} | { ok: false; reason: string; message?: string }
+export interface CreateCommentOk { ok: true; comment: EnrichedComment; }
+export interface CreateCommentFail { ok: false; reason: string; message?: string; }
+export type CreateCommentResult = CreateCommentOk | CreateCommentFail;
 
 export async function createComment(
   supabase: SupabaseClient,

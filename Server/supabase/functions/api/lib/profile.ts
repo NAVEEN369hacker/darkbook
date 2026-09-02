@@ -126,11 +126,9 @@ export async function getProfile(
   };
 }
 
-export interface FollowResult {
-  ok: true;
-  isFollowing: boolean;
-  followersCount: number;
-} | { ok: false; reason: string; message: string }
+export interface FollowOk { ok: true; isFollowing: boolean; followersCount: number; }
+export interface FollowFail { ok: false; reason: string; message: string; }
+export type FollowResult = FollowOk | FollowFail;
 
 export async function followUser(
   supabase: SupabaseClient,

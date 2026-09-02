@@ -134,10 +134,14 @@ export interface CreateAdminPostInput {
   poll?: CreatePollForPostInput;
 }
 
+export interface CreateAdminPostOk { ok: true; post: Record<string, unknown>; pollId: string | null; }
+export interface CreateAdminPostFail { ok: false; reason: string; message: string; }
+export type CreateAdminPostResult = CreateAdminPostOk | CreateAdminPostFail;
+
 export async function createAdminPost(
   supabase: SupabaseClient,
   input: CreateAdminPostInput,
-): Promise<{ ok: true; post: Record<string, unknown>; pollId: string | null } | { ok: false; reason: string; message: string }> {
+): Promise<CreateAdminPostResult> {
   if (typeof input.text !== 'string' || !input.text.trim()) {
     return { ok: false, reason: 'validation_failed', message: 'text required' };
   }
@@ -197,10 +201,14 @@ export async function createAdminPost(
   return { ok: true, post: { ...row, isAdminPost: true, text: row.content, photoUrl: row.photo_url }, pollId };
 }
 
+export interface PinPostOk { ok: true; post: Record<string, unknown>; }
+export interface PinPostFail { ok: false; reason: string; message: string; }
+export type PinPostResult = PinPostOk | PinPostFail;
+
 export async function pinPost(
   supabase: SupabaseClient,
   postId: string,
-): Promise<{ ok: true; post: Record<string, unknown> } | { ok: false; reason: string; message: string }> {
+): Promise<PinPostResult> {
   const now = new Date().toISOString();
   const { data, error } = await supabase
     .from('posts')
@@ -212,10 +220,14 @@ export async function pinPost(
   return { ok: true, post: { ...data, isAdminPost: true, text: data.content, photoUrl: data.photo_url, pinnedAt: now } };
 }
 
+export interface DeletePostOk { ok: true; removedId: string; }
+export interface DeletePostFail { ok: false; reason: string; message: string; }
+export type DeletePostResult = DeletePostOk | DeletePostFail;
+
 export async function deletePost(
   supabase: SupabaseClient,
   postId: string,
-): Promise<{ ok: true; removedId: string } | { ok: false; reason: string; message: string }> {
+): Promise<DeletePostResult> {
   const { data: post } = await supabase
     .from('posts')
     .select('id, poll_id')
@@ -254,14 +266,15 @@ export async function listAccounts(supabase: SupabaseClient): Promise<Array<Reco
   }));
 }
 
+export interface SwitchAccountOk { ok: true; did: string; uid: string; handle: string | null; displayName: string; colorHex: string; accessToken: string; expiresAt: string | null; }
+export interface SwitchAccountFail { ok: false; reason: string; message: string; }
+export type SwitchAccountResult = SwitchAccountOk | SwitchAccountFail;
+
 export async function switchAccount(
   supabase: SupabaseClient,
   adminDid: string,
   targetUid: string,
-): Promise<
-  | { ok: true; did: string; uid: string; handle: string | null; displayName: string; colorHex: string; accessToken: string; expiresAt: string | null }
-  | { ok: false; reason: string; message: string }
-> {
+): Promise<SwitchAccountResult> {
   const { data: target, error } = await supabase
     .from('daily_identities')
     .select('*')

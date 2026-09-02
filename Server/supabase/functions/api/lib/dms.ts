@@ -114,11 +114,9 @@ export async function getThread(
   };
 }
 
-export interface SendMessageResult {
-  ok: true;
-  message: Record<string, unknown>;
-  recipient: Record<string, unknown>;
-} | { ok: false; reason: string; message: string }
+export interface SendMessageOk { ok: true; message: Record<string, unknown>; recipient: Record<string, unknown>; }
+export interface SendMessageFail { ok: false; reason: string; message: string; }
+export type SendMessageResult = SendMessageOk | SendMessageFail;
 
 export async function sendMessage(
   supabase: SupabaseClient,

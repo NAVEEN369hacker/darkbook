@@ -128,11 +128,9 @@ export async function getTopic(
   };
 }
 
-export interface CreateArgumentResult {
-  ok: true;
-  post: Record<string, unknown>;
-  balance: number;
-} | { ok: false; reason: string; message: string; needed?: number; have?: number }
+export interface CreateArgumentOk { ok: true; post: Record<string, unknown>; balance: number; }
+export interface CreateArgumentFail { ok: false; reason: string; message: string; needed?: number; have?: number; }
+export type CreateArgumentResult = CreateArgumentOk | CreateArgumentFail;
 
 export async function createArgument(
   supabase: SupabaseClient,
@@ -233,11 +231,15 @@ export interface CreateTopicInput {
   parties: Array<{ label: string; emoji?: string; colorHex?: string }>;
 }
 
+export interface CreateTopicOk { ok: true; topic: Record<string, unknown>; }
+export interface CreateTopicFail { ok: false; reason: string; message: string; }
+export type CreateTopicResult = CreateTopicOk | CreateTopicFail;
+
 export async function createTopic(
   supabase: SupabaseClient,
   adminDid: string,
   input: CreateTopicInput,
-): Promise<{ ok: true; topic: Record<string, unknown> } | { ok: false; reason: string; message: string }> {
+): Promise<CreateTopicResult> {
   if (typeof input.title !== 'string' || !input.title.trim()) {
     return { ok: false, reason: 'validation_failed', message: 'title required' };
   }
