@@ -70,13 +70,14 @@ export async function listConversations(
   return conversations;
 }
 
-export interface ThreadResult {
+export interface ThreadResultData {
   partnerUid: string;
   partnerName: string;
   partnerHandle: string;
   partnerColor: string;
   messages: Array<Record<string, unknown>>;
-} | null
+}
+export type ThreadResult = ThreadResultData | null;
 
 export async function getThread(
   supabase: SupabaseClient,

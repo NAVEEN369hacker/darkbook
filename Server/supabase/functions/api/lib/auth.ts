@@ -96,10 +96,12 @@ export async function takenActiveHandles(supabase: SupabaseClient): Promise<Set<
   return new Set((data ?? []).map((r: { handle: string }) => r.handle).filter(Boolean));
 }
 
+export type IdentityByDid = { uid: string; handle: string; display_name: string; color_hex: string; expires_at: string };
+
 export async function findActiveIdentityByDid(
   supabase: SupabaseClient,
   did: string,
-): Promise<{ uid: string; handle: string; display_name: string; color_hex: string; expires_at: string } | null> {
+): Promise<IdentityByDid | null> {
   const nowIso = new Date().toISOString();
   const { data, error } = await supabase
     .from('daily_identities')
@@ -114,10 +116,12 @@ export async function findActiveIdentityByDid(
   return data as { uid: string; handle: string; display_name: string; color_hex: string; expires_at: string };
 }
 
+export type IdentityByHandle = { uid: string; did: string; handle: string; display_name: string; color_hex: string };
+
 export async function findActiveIdentityByHandle(
   supabase: SupabaseClient,
   handle: string,
-): Promise<{ uid: string; did: string; handle: string; display_name: string; color_hex: string } | null> {
+): Promise<IdentityByHandle | null> {
   const clean = handle.replace(/^@/, '').trim().toLowerCase();
   if (!clean) return null;
   const { data, error } = await supabase

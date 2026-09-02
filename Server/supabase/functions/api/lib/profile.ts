@@ -11,11 +11,12 @@ import { createNotification } from './notifications.ts';
 
 const FEED_WINDOW_MS = 25 * 60 * 60 * 1000;
 
-export interface ProfileResponse {
+export interface ProfileResponseData {
   profile: Record<string, unknown>;
   stats: Record<string, unknown>;
   posts: Array<Record<string, unknown>>;
-} | null
+}
+export type ProfileResponse = ProfileResponseData | null;
 
 export async function getProfile(
   supabase: SupabaseClient,

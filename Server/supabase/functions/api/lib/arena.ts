@@ -73,10 +73,12 @@ export async function listTopics(supabase: SupabaseClient): Promise<Array<Record
   });
 }
 
+export type GetTopicResult = { topic: Record<string, unknown>; posts: Array<Record<string, unknown>> };
+
 export async function getTopic(
   supabase: SupabaseClient,
   topicId: string,
-): Promise<{ topic: Record<string, unknown>; posts: Array<Record<string, unknown>> } | null> {
+): Promise<GetTopicResult | null> {
   const { data, error } = await supabase
     .from('arena_topics')
     .select('*')
