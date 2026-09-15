@@ -21,30 +21,18 @@ import Discover from './pages/Discover';
 import BottomNav from './components/BottomNav';
 import Footer from './components/Footer';
 import { loadSession, saveSession, clearSession, Session } from './storage';
-import { Identity, recognizeDevice, getUnreadDMCount, getUnreadNotifCount, authEvents, spendCoins } from './api';
+import { Identity, recognizeDevice, getUnreadDMCount, getUnreadNotifCount, authEvents } from './api';
 import { getDeviceInfo } from './device';
 
 /** Routes where the bottom nav should be visible.
  *  Vault is no longer in the nav — it's accessed via Account. */
 const NAV_ROUTES = ['/', '/dms', '/notifications', '/arena', '/account'];
 
-/** Map of path → coin-cost reason (for "open" charges). Idempotent per day. */
-const COIN_GATE: Record<string, 'open_feed' | 'open_dms' | 'open_arena' | null> = {
-  '/': 'open_feed',
-  '/dms': 'open_dms',
-  '/arena': 'open_arena',
-  '/account': null,
-  '/notifications': null,
-  '/admin': null,            // admin is gate-allowed; admin check itself happens inside Admin.tsx
-  '/vault': null,            // Vault is the source of coins — never gate it
-};
-
 export default function App() {
   const [session, setSession] = useState<Session | null>(() => loadSession());
   const [toast, setToast] = useState<string | null>(null);
   const [unreadDMs, setUnreadDMs] = useState(0);
   const [unreadNotifs, setUnreadNotifs] = useState(0);
-  const [blockedFrom, setBlockedFrom] = useState<string | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -115,49 +103,6 @@ export default function App() {
     });
   }, []);
 
-  // ─── Coin Gate ───────────────────────────────────────────────────────
-  // On every navigation, if the target path has a gate reason, call
-  // spendCoins. If the user is short on coins (status 402), redirect to
-  // /account with the page name so the banner can explain.
-  //
-  // Per-day idempotency for open_* reasons lives server-side, so re-mounts
-  // don't double-charge. The "charge only once per session per path" is
-  // tracked here in a Set to avoid even the network round-trip.
-  const [chargedThisSession, setChargedThisSession] = useState<Set<string>>(new Set());
-
-  useEffect(() => {
-    if (!session) return;
-    const reason = COIN_GATE[location.pathname];
-    if (!reason) return;
-    if (chargedThisSession.has(`${session.uid}:${reason}`)) return;
-
-    (async () => {
-      const res = await spendCoins(session, reason);
-      if (res.ok) {
-        setChargedThisSession((s) => {
-          const next = new Set(s);
-          next.add(`${session.uid}:${reason}`);
-          return next;
-        });
-        setBlockedFrom(null);
-        return;
-      }
-      if (res.status === 402) {
-        // Redirect to account with banner.
-        const fromLabel =
-          reason === 'open_feed' ? 'Feed'
-          : reason === 'open_dms' ? 'DMs'
-          : reason === 'open_arena' ? 'Arena'
-          : 'this section';
-        setBlockedFrom(fromLabel);
-        navigate(`/account?from=${encodeURIComponent(reason)}`, { replace: true });
-      } else {
-        // Hard error — still navigate but don't show banner.
-        setToast(res.message || 'Could not open this section.');
-      }
-    })();
-  }, [location.pathname, session, chargedThisSession, navigate]);
-
   const onIdentity = (id: Identity) => {
     const next: Session = {
       did: id.did,
@@ -175,8 +120,6 @@ export default function App() {
   const logout = () => {
     clearSession();
     setSession(null);
-    setChargedThisSession(new Set());
-    setBlockedFrom(null);
     navigate('/login');
   };
 
@@ -266,7 +209,7 @@ export default function App() {
             path="/account"
             element={
               session ? (
-                <AccountCenter session={session} onLogout={logout} onIdentity={onIdentity} blockedFrom={blockedFrom} />
+                <AccountCenter session={session} onLogout={logout} onIdentity={onIdentity} />
               ) : (
                 <Navigate to="/login" replace />
               )
