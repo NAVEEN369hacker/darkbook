@@ -2,3 +2,5 @@
 - When the user explicitly states a boundary or constraint, acknowledge it tersely and confine subsequent work to that scope without re-litigating. Confidence: 0.7
 - User prefers tangible artifacts (committed files, migration scripts, saved text files) over ephemeral chat-only output — when given information or summaries of significance, persist them as files in the project folder by default. Confidence: 0.7
 - When evaluating service tiers, plans, or capacity limits, present Min / Average / Max ranges across all relevant metrics (e.g. DAU, MAU, concurrent users, peak req/sec), not single-point estimates. Confidence: 0.75
+- User pushes back when responses are superficial. When addressing a stated problem (e.g. policy violation, error, unmet requirement), dig into the root cause and explicitly map each fix to the specific violation/issue, not just add surface-level artifacts. Confidence: 0.8
+- When guiding deployment / git / build workflows (Netlify, GitHub, etc.), give concrete step-by-step instructions with the exact commands or UI actions in order, since the user asks "how to do these?" rather than wanting a high-level overview. Confidence: 0.75
