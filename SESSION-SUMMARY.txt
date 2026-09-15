@@ -1,0 +1,51 @@
+# Ghostline Deployment Session — Summary
+
+## What got done
+
+**1. Initial push to GitHub (commit 396676b)**
+- Cleaned working tree: removed $null junk file, discarded local .commandcode/ changes
+- Removed build artifacts from tracking: Web/dist/, Web/vite.config.js, Web/vite.config.d.ts, *.tsbuildinfo
+- Strengthened .gitignore to exclude these patterns permanently
+- Pushed 106 files to https://github.com/NAVEEN369hacker/darkbook
+
+**2. SQL migration applied to Supabase Postgres** (you did this manually)
+- Server/supabase/migrations/20260101000000_ghostline_edge_backend.sql — column renames, author_did additions, indexes, spend_coins_atomic RPC, run_rotation_tick RPC, pg_cron schedule
+
+**3. Edge Function deployment — fixed 3 TS bundling errors**
+- feed.ts:199 — interface ... | { ok: false; ... } invalid; converted to type alias
+- dms.ts, profile.ts, auth.ts, arena.ts, admin.ts — same union-with-inline-object anti-pattern; converted all to named type aliases
+- Final deploy succeeded: Deployed Functions on project vhtorejqpafjaoewpbvn: api
+
+**4. Device registration bug chain — fixed step by step**
+- "Missing authorization header" — Supabase Edge Function gateway requires JWT by default. Added [functions.api] verify_jwt = false to Server/supabase/config.toml (commit fc0f3cb)
+- "no route for POST /api/api/auth/register" — VITE_API_BASE had a trailing /api, doubling the path. Updated client to defensively strip trailing /api, updated .env.example and README.md (commit 5b57d61)
+- "Worker is not defined" — deno.land/x/bcrypt@v0.4.1 uses Worker global which Supabase Edge Functions don't provide. Swapped to bcryptjs@2.4.3 via esm.sh (commit 9460edb)
+- "permission denied for table tokens" — service_role had no GRANTs on the tables (they were owned by postgres). Created migration 20260101000001_grants.sql granting DML to service_role (commit fb9254d)
+
+**5. AdSense integration started**
+- Added AdSense verification snippet + google-adsense-account meta tag to Web/index.html (commit fb9254d)
+- You chose Google's CMP with 3 choices (Consent / Do not consent / Manage)
+- AdSense is now reviewing your account
+
+## Files created/modified
+
+- Web/src/api.ts — defensive strip of trailing /api from VITE_API_BASE
+- Web/.env.example — corrected env var example (no trailing /api)
+- Web/index.html — AdSense verification snippet
+- README.md — corrected deploy instructions
+- Server/supabase/config.toml — [functions.api] verify_jwt = false
+- Server/supabase/functions/api/lib/feed.ts, arena.ts, dms.ts, admin.ts, polls.ts, profile.ts, auth.ts — TypeScript union fixes
+- Server/supabase/functions/api/lib/identity.ts — bcrypt → bcryptjs swap
+- Server/supabase/migrations/20260101000001_grants.sql — service_role GRANTs (NEW)
+
+## What's BLOCKING — what you do next
+
+1. Apply the grants SQL to Supabase — paste Server/supabase/migrations/20260101000001_grants.sql into https://supabase.com/dashboard/project/vhtorejqpafjaoewpbvn/sql → Run. This unblocks "issueSession failed: permission denied for table tokens".
+2. Wait for AdSense approval (usually hours to a few days).
+3. Replace simulated rewarded ads — Server/supabase/functions/api/routes/coins.ts → watchAd handler currently uses Math.random() < 0.8. Wire real AdSense/Ad Manager there after approval.
+4. Apply the second Netlify env var fix: VITE_API_BASE=https://vhtorejqpafjaoewpbvn.supabase.co/functions/v1 (no trailing /api), then trigger redeploy.
+
+## Infrastructure roadmap (your plan)
+
+- Custom domain (e.g. ghostline.app) — re-verify AdSense ownership once, ~minutes
+- Supabase + Render + Cloudflare R2 migration — no AdSense re-review needed. AdSense cares only about URL and content, not backend. Publisher ID stays attached to your account.

@@ -168,7 +168,52 @@ export default function Login({ onIdentity }: Props) {
         )}
       </form>
 
-      <p className="muted" style={{ marginTop: 16 }}>
+      <div className="content-section fade-up" style={{ marginTop: 60, textAlign: 'left', maxWidth: 600, margin: '60px auto 0' }}>
+        <h2 style={{ textAlign: 'center', marginBottom: 30 }}>How it Works</h2>
+        <div style={{ display: 'grid', gap: 24 }}>
+          <div style={{ display: 'flex', gap: 16 }}>
+            <div style={{ fontSize: 24 }}>🛡️</div>
+            <div>
+              <strong style={{ display: 'block' }}>Hyper-Anonymous</strong>
+              <p className="muted" style={{ margin: 0 }}>No emails, no phone numbers. Just your device and a random handle.</p>
+            </div>
+          </div>
+          <div style={{ display: 'flex', gap: 16 }}>
+            <div style={{ fontSize: 24 }}>🌙</div>
+            <div>
+              <strong style={{ display: 'block' }}>Daily Reset</strong>
+              <p className="muted" style={{ margin: 0 }}>Every midnight UTC, your identity and history evaporate. Start fresh every day.</p>
+            </div>
+          </div>
+          <div style={{ display: 'flex', gap: 16 }}>
+            <div style={{ fontSize: 24 }}>🔐</div>
+            <div>
+              <strong style={{ display: 'block' }}>E2E Encrypted</strong>
+              <p className="muted" style={{ margin: 0 }}>Your DMs are encrypted on your device. We cannot read them, period.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="content-section fade-up" style={{ marginTop: 60, textAlign: 'left', maxWidth: 600, margin: '60px auto 0' }}>
+        <h2 style={{ textAlign: 'center', marginBottom: 30 }}>FAQ</h2>
+        <div style={{ display: 'grid', gap: 20 }}>
+          <div>
+            <strong style={{ display: 'block', marginBottom: 4 }}>Is my data really deleted?</strong>
+            <p className="muted" style={{ margin: 0 }}>Yes. All social state is purged from the active database every 24 hours.</p>
+          </div>
+          <div>
+            <strong style={{ display: 'block', marginBottom: 4 }}>How does the Device ID work?</strong>
+            <p className="muted" style={{ margin: 0 }}>It's a permanent internal ID used only to prevent abuse and spam. It's never public.</p>
+          </div>
+          <div>
+            <strong style={{ display: 'block', marginBottom: 4 }}>Can I keep my handle?</strong>
+            <p className="muted" style={{ margin: 0 }}>No. The core philosophy of Ghostline is the daily reset. Every day is a new beginning.</p>
+          </div>
+        </div>
+      </div>
+
+      <p className="muted" style={{ marginTop: 40 }}>
         Device identity is permanent to this physical hardware. Your public handle
         changes daily at midnight UTC, but stays the same all day — even if you
         log out and log back in.

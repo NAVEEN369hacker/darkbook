@@ -1,2 +1,4 @@
 - Architecture: frontend (Netlify) and backend (Supabase Edge Functions) are separate deploys that communicate via HTTP API calls; user's laptop is NOT a server. Don't add code that assumes a local server runtime (e.g., setInterval timers, in-memory state, local-disk fallback for uploads) when the target is Edge Functions. Confidence: 0.9
 - When the user explicitly states a boundary or constraint, acknowledge it tersely and confine subsequent work to that scope without re-litigating. Confidence: 0.7
+- User prefers tangible artifacts (committed files, migration scripts, saved text files) over ephemeral chat-only output — when given information or summaries of significance, persist them as files in the project folder by default. Confidence: 0.7
+- When evaluating service tiers, plans, or capacity limits, present Min / Average / Max ranges across all relevant metrics (e.g. DAU, MAU, concurrent users, peak req/sec), not single-point estimates. Confidence: 0.75

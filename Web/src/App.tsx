@@ -10,7 +10,16 @@ import AccountCenter from './pages/AccountCenter';
 import Profile from './pages/Profile';
 import Arena from './pages/Arena';
 import Admin from './pages/Admin';
+import About from './pages/About';
+import Privacy from './pages/Privacy';
+import Terms from './pages/Terms';
+import Contact from './pages/Contact';
+import Blog from './pages/Blog';
+import BlogPost from './pages/BlogPost';
+import Landing from './pages/Landing';
+import Discover from './pages/Discover';
 import BottomNav from './components/BottomNav';
+import Footer from './components/Footer';
 import { loadSession, saveSession, clearSession, Session } from './storage';
 import { Identity, recognizeDevice, getUnreadDMCount, getUnreadNotifCount, authEvents, spendCoins } from './api';
 import { getDeviceInfo } from './device';
@@ -190,10 +199,11 @@ export default function App() {
                   onError={showError}
                 />
               ) : (
-                <Login onIdentity={onIdentity} />
+                <Landing />
               )
             }
           />
+          <Route path="/discover" element={<Discover />} />
           <Route
             path="/welcome"
             element={
@@ -204,6 +214,12 @@ export default function App() {
               )
             }
           />
+          <Route path="/about" element={<About />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:id" element={<BlogPost />} />
           <Route
             path="/login"
             element={
@@ -294,6 +310,8 @@ export default function App() {
       </div>
 
       {showNav && <BottomNav unreadDMs={unreadDMs} unreadNotifs={unreadNotifs} />}
+
+      {!showNav && <Footer />}
 
       {toast && (
         <div className="toast" onClick={() => setToast(null)} role="alert">
