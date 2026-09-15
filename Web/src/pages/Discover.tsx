@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 // Mock data for public discovery.
-// In a real app, this would be a call to a public API endpoint.
 const FEATURED_POSTS = [
   {
     id: '1',
@@ -28,7 +27,7 @@ const FEATURED_POSTS = [
   {
     id: '4',
     handle: 'SilentEcho',
-    content: 'Privacy isn't about having something to hide, it is about having something to protect.',
+    content: 'Privacy isn\'t about having something to hide, it is about having something to protect.',
     votes: 305,
     time: '12h ago'
   },
